@@ -13,3 +13,13 @@
     1. 远程调用 float sum(float a, float b)
     2. 远程调用 string uppercase(str)
     3. 不少于2个客户端，1个服务端
+
+# Question
+
+服务提供者和服务消费者如何约定接口？
+
+通常是在一个单独的模块中定义接口，服务提供者和服务消费者都通过Maven依赖来引用此模块。本文档为了简便，服务提供者和服务消费者分别创建两个完全一模一样的接口，实际使用中不推荐这样使用。
+
+> Reference: 
+> - https://help.aliyun.com/document_detail/97471.html
+> - https://juejin.cn/post/6844903950974468104 参考这个组织demo的文件架构

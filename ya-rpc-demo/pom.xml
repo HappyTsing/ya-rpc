@@ -14,6 +14,7 @@
     <modules>
         <module>ya-rpc-client</module>
         <module>ya-rpc-server</module>
+        <module>ya-rpc-api</module>
     </modules>
 
     <properties>
@@ -21,5 +22,15 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <!-- dependencyManagement的依赖不会被子项目继承，但子项目中仅提供 groupId 和 artifactId 即可，无需提供 version。 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.wang</groupId>
+                <artifactId>ya-rpc-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
