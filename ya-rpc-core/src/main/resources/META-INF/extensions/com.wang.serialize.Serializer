@@ -1,0 +1,2 @@
+hessian=com.wang.serialize.hessian.HessianSerializer
+protostuff=com.wang.serialize.protostuff.ProtostuffSerializer

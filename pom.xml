@@ -21,6 +21,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <encoding>UTF-8</encoding>
+        <!-- lambok -->
         <lambok.version>1.18.24</lambok.version>
 
 <!--        <netty.version>4.1.42.Final</netty.version>-->
@@ -32,15 +33,22 @@
         <junit.platform.version>1.9.0</junit.platform.version>
         <!--logging-->
         <logback-classic.version>1.4.4</logback-classic.version>
-        <!-- lambok -->
 
-<!--        序列化-->
-<!--        &lt;!&ndash; protostuff &ndash;&gt;-->
-<!--        <protostuff.version>1.7.2</protostuff.version>-->
-<!--        &lt;!&ndash;hessian&ndash;&gt;-->
-<!--        <hessian.version>4.0.65</hessian.version>-->
+        <!-- 序列化-->
+        <!-- protostuff -->
+        <protostuff.version>1.8.0</protostuff.version>
+        <!-- hessian-->
+        <hessian.version>4.0.66</hessian.version>
+        <!-- kyro-->
+        <kryo.version>4.0.2</kryo.version>
     </properties>
     <dependencies>
+        <!-- lambok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lambok.version}</version>
+        </dependency>
         <!--单元测试-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -63,10 +71,21 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <!-- 序列化 -->
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lambok.version}</version>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
             </dependency>
             <!--zookeeper 类库-->
             <dependency>
