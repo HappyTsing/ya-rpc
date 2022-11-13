@@ -1,0 +1,2 @@
+random=com.wang.loadbalancer.random.RandomLoadBalancer
+roundrobin=com.wang.loadbalancer.roundrobin.RandomLoadBalancer
