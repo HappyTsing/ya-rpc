@@ -5,6 +5,7 @@ import lombok.*;
 import java.io.Serializable;
 
 /**
+ * RPC 请求
  * @author happytsing
  */
 @AllArgsConstructor
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Builder
 @ToString
-public class RpcServerRequest implements Serializable {
+public class RpcRequest implements Serializable {
     /**
      * requestId 请求 ID
      * interfaceName 接口名

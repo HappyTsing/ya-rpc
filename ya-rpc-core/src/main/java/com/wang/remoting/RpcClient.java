@@ -1,7 +1,6 @@
 package com.wang.remoting;
 
-import com.wang.dto.RpcRequest;
-import com.wang.dto.RpcResponse;
+import com.wang.dto.RpcMessage;
 
 /**
  * 用于发起请求，动态代理的类的方法执行时会调用
@@ -10,10 +9,12 @@ import com.wang.dto.RpcResponse;
 public interface RpcClient {
     /**
      *
-     * @param rpcRequest 发起 RPC 请求
+     * @param rpcMessage 发起 RPC 请求
      * @return 响应结果
      */
-    <T> RpcResponse<T> sendRpcRequest(RpcRequest rpcRequest);
+    Object send(RpcMessage rpcMessage);
+
+//    <T> RpcResponse<T> handleRpcResponse(RpcResponse<T> rpcResponse);
 
     /**
      * 获取动态代理对象

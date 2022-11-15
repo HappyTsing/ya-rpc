@@ -1,12 +1,11 @@
 package com.wang.dto;
 
-
 import com.wang.enums.RpcResponseCodeEnum;
 import lombok.*;
-
 import java.io.Serializable;
 
 /**
+ * RPC 响应
  * @author happytsing
  */
 @AllArgsConstructor

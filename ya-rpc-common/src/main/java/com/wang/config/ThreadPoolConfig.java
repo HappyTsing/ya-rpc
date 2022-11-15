@@ -1,4 +1,4 @@
-package com.wang.utils.threadpool;
+package com.wang.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author happytsing
  */
-@Setter
 @Getter
-public class CustomThreadPoolConfig {
+@Setter
+public class ThreadPoolConfig {
     /**
      * 线程池默认参数
      */
