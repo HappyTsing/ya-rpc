@@ -24,6 +24,15 @@ public interface Registry {
     void unregister(ServiceSignature serviceSignature,InetSocketAddress inetSocketAddress);
 
     /**
+     * 注销注册本机注册的所有服务
+     */
+    void unregisterAllMyService();
+
+    /**
+     * 取消注册所有机器注册的所有服务
+     */
+    void unregisterAllService();
+    /**
      * 查找注册的服务，返回的服务是通过负载均衡得到的结果
      *
      * @param rpcRequest 查询条件
@@ -35,4 +44,5 @@ public interface Registry {
      * 监听某服务
      */
     void watch(ServiceSignature  serviceSignature);
+
 }

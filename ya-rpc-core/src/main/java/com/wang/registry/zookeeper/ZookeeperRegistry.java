@@ -69,6 +69,7 @@ public class ZookeeperRegistry implements Registry {
     /**
      * 清楚所有机器注册的所有服务，慎用！
      */
+    @Override
     public void unregisterAllService() {
         CuratorUtils.removeNode(zkClient,ZK_REGISTER_ROOT_PATH,true);
     }
@@ -76,6 +77,7 @@ public class ZookeeperRegistry implements Registry {
     /**
      * 清楚本机注册的所有服务，在关机时使用。
      */
+    @Override
     public void unregisterAllMyService() {
         for(Path path: REGISTERED_PROVIDER_PATH_CACHE){
             CuratorUtils.removeNode(zkClient,path,false);
