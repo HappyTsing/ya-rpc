@@ -1,9 +1,12 @@
 package com.wang.loadbalance.roundrobin;
 
 import com.wang.loadbalance.AbstractLoadBalancer;
-
 import java.util.List;
 
+/**
+ * 轮询策略
+ * @author happytsing
+ */
 public class RoundRobinLoadBalancer extends AbstractLoadBalancer {
     private static long pos = 0;
 

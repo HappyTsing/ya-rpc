@@ -18,10 +18,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * servicePath: 服务的路径，该路径下就是多个提供该服务的服务器
- * providerPath: 提供服务的服务器ip:port 对应的 znode 的路径
- * provider: ip:port 提供服务的服务器地址和端口
- *
+ * zookeeper 注册中心
+ *      servicePath: 服务的路径，该路径下就是<Strong>多个</Strong>提供该服务的服务器，也就是 provider
+ *      providerPath: 提供服务的 provider 对应的 znode 的路径
+ *      provider: host:port 提供服务的服务器地址和端口
+ * @author happytsing
  */
 @Slf4j
 public class ZookeeperRegistry implements Registry {
@@ -31,14 +32,15 @@ public class ZookeeperRegistry implements Registry {
     public static final Path ZK_REGISTER_ROOT_PATH = Paths.get("/ya-rpc-provider");
 
     /**
+     * 某服务对应的 providers 缓存
      * key: ServiceSignature
-     * value: Provider
+     * value: provider
      */
     private static final Map<ServiceSignature, List<String>> PROVIDER_CACHE = new ConcurrentHashMap<>();
 
 
     /**
-     * 已经注册的 providerPath
+     * 本机注册的 providerPath 缓存，用于避免服务重复注册，以及最后关机时清除本机注册的所有服务。
      */
     private static final Set<Path> REGISTERED_PROVIDER_PATH_CACHE = ConcurrentHashMap.newKeySet();
 
@@ -47,16 +49,14 @@ public class ZookeeperRegistry implements Registry {
         this.loadBalancer = ExtensionLoader.getExtensionLoader(LoadBalancer.class).getExtension("roundrobin");
     }
 
-
-
     @Override
     public void register(ServiceSignature serviceSignature, InetSocketAddress inetSocketAddress) {
         Path providerPath = ZK_REGISTER_ROOT_PATH.resolve(serviceSignature.toString()).resolve(toZnodeName(inetSocketAddress));
         if(REGISTERED_PROVIDER_PATH_CACHE.contains(providerPath)){
-            log.info("The service already registered. The providerPath is [{}]",providerPath);
+            log.info("The service already registered. The providerPath is {}",providerPath);
         }else{
             CuratorUtils.createPersistentNode(zkClient,providerPath);
-            log.info("Register service success, The providerPath is [{}]",providerPath);
+            log.info("Register service success, The providerPath is {}", providerPath);
         }
     }
 
@@ -66,9 +66,20 @@ public class ZookeeperRegistry implements Registry {
         CuratorUtils.removeNode(zkClient,providerPath,false);
     }
 
-    @Override
-    public void unregisterAllMyService() {
+    /**
+     * 清楚所有机器注册的所有服务，慎用！
+     */
+    public void unregisterAllService() {
         CuratorUtils.removeNode(zkClient,ZK_REGISTER_ROOT_PATH,true);
+    }
+
+    /**
+     * 清楚本机注册的所有服务，在关机时使用。
+     */
+    public void unregisterAllMyService() {
+        for(Path path: REGISTERED_PROVIDER_PATH_CACHE){
+            CuratorUtils.removeNode(zkClient,path,false);
+        }
     }
 
     @Override
@@ -77,21 +88,21 @@ public class ZookeeperRegistry implements Registry {
         ServiceSignature serviceSignature = rpcRequest.getServiceSignature();
         if (PROVIDER_CACHE.containsKey(serviceSignature)) {
             providerList =  PROVIDER_CACHE.get(serviceSignature);
-            log.info("Lookup service success, hit provider cache. The providerList is [{}]", providerList);
+            log.info("Lookup service success, hit provider cache. The providerList is {}", providerList);
         }else {
             Path servicePath = ZK_REGISTER_ROOT_PATH.resolve(serviceSignature.toString());
             providerList = CuratorUtils.getChildrenNodes(zkClient,servicePath);
             PROVIDER_CACHE.put(serviceSignature,providerList);
-            log.info("Lookup service success, not hit provider cache, get from zookeeper. The providerList is [{}]", providerList);
+            log.info("Lookup service success, not hit provider cache, get from zookeeper. The providerList is {}", providerList);
         }
         watch(serviceSignature);
 
-        // 每个服务下面有若干个 znode 节点，每个节点的名字就是服务的地址。
+        // 每个服务下面有若干个 znode 节点，每个节点的名字就是服务的 host:port，即 provider。
         // 例如服务 com.wang.HelloService?group=1&version=1
-        // 这个服务下面有两个子节点：192.168.0.1:2020 和 192.168.0.2：2:2021
+        // 这个服务下面有两个子节点：192.168.0.1:2020 和 192.168.0.2:2021
         // 这两个服务器都可以提供此服务，此时就需要使用负载均衡，从中选取一个服务。
         String selectedProvider = loadBalancer.selectProvider(providerList);
-        log.info("SelectedProvider is [{}]", selectedProvider);
+        log.info("SelectedProvider is {}", selectedProvider);
         String[] hostIp = selectedProvider.split(":");
         String host = hostIp[0];
         int port = Integer.parseInt(hostIp[1]);
@@ -101,7 +112,7 @@ public class ZookeeperRegistry implements Registry {
     @Override
     public void watch(ServiceSignature serviceSignature) {
         Path servicePath = ZK_REGISTER_ROOT_PATH.resolve(serviceSignature.toString());
-        log.info("Watch service success, Watching service is [{}]",serviceSignature);
+        log.info("Watch service success, Watching service is {}",serviceSignature);
         CuratorUtils.addChildrenListener(zkClient,servicePath, (type, oldData, newData) -> {
             log.info("type: {}, oldData: {}, newData: {}", type, oldData, newData);
             List<String> providerList = CuratorUtils.getChildrenNodes(zkClient,servicePath);

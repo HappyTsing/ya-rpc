@@ -226,7 +226,6 @@ public class ExtensionLoader<T> {
                         // our SPI use key-value pair so both of them must not be empty
                         if (name.length() > 0 && clazzName.length() > 0) {
                             Class<?> clazz = classLoader.loadClass(clazzName);
-                            log.info(name);
                             extensionClasses.put(name, clazz);
                         }
                     } catch (ClassNotFoundException e) {

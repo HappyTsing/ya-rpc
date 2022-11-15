@@ -6,6 +6,10 @@ import com.wang.extension.SPI;
 
 import java.net.InetSocketAddress;
 
+/**
+ * 注册中心
+ * @author happytsing
+ */
 @SPI
 public interface Registry {
 
@@ -13,7 +17,6 @@ public interface Registry {
      * 向注册中心注册服务。注册的节点（在zookeeper表示为路径）为serviceSignature，该节点的值是提供该服务的服务端的 ip:port
      */
     void register(ServiceSignature serviceSignature, InetSocketAddress inetSocketAddress);
-
 
     /**
      * 向注册中心取消注册服务
@@ -27,12 +30,6 @@ public interface Registry {
      * @return 符合查询条件的所有注册者
      */
     InetSocketAddress lookup(RpcRequest rpcRequest);
-
-    /**
-     * 取消所有本机的服务，用于关机的时候
-     */
-    void unregisterAllMyService();
-
 
     /**
      * 监听某服务

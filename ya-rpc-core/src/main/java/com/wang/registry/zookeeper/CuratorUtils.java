@@ -1,5 +1,6 @@
 package com.wang.registry.zookeeper;
 
+import com.wang.config.CommonConfig;
 import com.wang.exception.RegistryException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
@@ -17,10 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class CuratorUtils {
     private static final int BASE_SLEEP_TIME = 1000;
     private static final int MAX_RETRIES = 3;
-
-
     private static CuratorFramework zkClient;
-    private static final String DEFAULT_ZOOKEEPER_ADDRESS = "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183";
 
     /**
      * Create persistent nodes. Unlike temporary nodes, persistent nodes are not removed when the client disconnects
@@ -30,7 +28,7 @@ public class CuratorUtils {
     public static void createPersistentNode(CuratorFramework zkClient, Path path) {
         try {
             if (zkClient.checkExists().forPath(path.toString()) != null) {
-                log.info("The node already exists. The node is:[{}]", path);
+                log.info("The node already exists. The node is: {}", path);
             } else {
                 //eg: /ya-rpc/com.wang.HelloService/127.0.0.1:9999
                 zkClient
@@ -42,10 +40,10 @@ public class CuratorUtils {
                         .withMode(CreateMode.PERSISTENT)
                         //创建节点的路径和数据
                         .forPath(path.toString());
-                log.info("Create node success. The node is: [{}]", path);
+                log.info("Create node success. The node is: {}", path);
             }
         } catch (Exception e) {
-            log.error("Create node fail. The node is: [{}]", path);
+            log.error("Create node fail. The node is: {}", path);
             throw new RegistryException("Create node fail.",e);
         }
     }
@@ -63,9 +61,9 @@ public class CuratorUtils {
             }else {
                 zkClient.delete().forPath(path.toString());
             }
-            log.info("Delete node success. The node is [{}]",path);
+            log.info("Delete node success. The node is {}",path);
         } catch (Exception e) {
-            log.info("Delete node fail. The node is [{}]",path);
+            log.info("Delete node fail. The node is {}",path);
             throw new RegistryException("Delete node fail.",e);
         }
     }
@@ -77,18 +75,17 @@ public class CuratorUtils {
 
         try {
             List<String> result = zkClient.getChildren().forPath(path.toString());
-            log.info("Get children success. The children are [{}]",result);
+            log.info("Get children success. The children are {}",result);
             return result;
         } catch (Exception e) {
-            log.error("Get children nodes fail. The father node is: [{}]", path);
+            log.error("Get children nodes fail. The father node is: {}", path);
             throw new RegistryException("Get children nodes fail.",e);
         }
     }
 
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
-        // todo 修改为从配置读入
-        String zookeeperAddress = DEFAULT_ZOOKEEPER_ADDRESS;
+        String zookeeperAddress = CommonConfig.zookeeperAddress;
         // if zkClient has been started, return directly
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
             return zkClient;

@@ -1,6 +1,7 @@
 package com.wang.exception;
 
 /**
+ * 注册中心异常
  * @author happytsing
  */
 public class RegistryException extends RuntimeException {

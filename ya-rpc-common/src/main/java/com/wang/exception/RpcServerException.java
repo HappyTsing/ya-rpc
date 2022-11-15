@@ -1,6 +1,7 @@
 package com.wang.exception;
 
 /**
+ * 服务端异常
  * @author happytsing
  */
 public class RpcServerException extends RuntimeException {

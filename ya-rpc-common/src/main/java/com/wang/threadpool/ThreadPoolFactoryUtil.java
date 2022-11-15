@@ -1,6 +1,7 @@
-package com.wang.utils.threadpool;
+package com.wang.threadpool;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.wang.config.ThreadPoolConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -26,15 +27,15 @@ public final class ThreadPoolFactoryUtil {
     }
 
     public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix) {
-        CustomThreadPoolConfig customThreadPoolConfig = new CustomThreadPoolConfig();
+        ThreadPoolConfig customThreadPoolConfig = new ThreadPoolConfig();
         return createCustomThreadPoolIfAbsent(customThreadPoolConfig, threadNamePrefix, false);
     }
 
-    public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix, CustomThreadPoolConfig customThreadPoolConfig) {
+    public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix, ThreadPoolConfig customThreadPoolConfig) {
         return createCustomThreadPoolIfAbsent(customThreadPoolConfig, threadNamePrefix, false);
     }
 
-    public static ExecutorService createCustomThreadPoolIfAbsent(CustomThreadPoolConfig customThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
+    public static ExecutorService createCustomThreadPoolIfAbsent(ThreadPoolConfig customThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
         ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(customThreadPoolConfig, threadNamePrefix, daemon));
         // 如果 threadPool 被 shutdown 的话就重新创建一个
         if (threadPool.isShutdown() || threadPool.isTerminated()) {
@@ -63,7 +64,7 @@ public final class ThreadPoolFactoryUtil {
         });
     }
 
-    private static ExecutorService createThreadPool(CustomThreadPoolConfig customThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
+    private static ExecutorService createThreadPool(ThreadPoolConfig customThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
         ThreadFactory threadFactory = createThreadFactory(threadNamePrefix, daemon);
         return new ThreadPoolExecutor(customThreadPoolConfig.getCorePoolSize(), customThreadPoolConfig.getMaximumPoolSize(),
                 customThreadPoolConfig.getKeepAliveTime(), customThreadPoolConfig.getUnit(), customThreadPoolConfig.getWorkQueue(),
