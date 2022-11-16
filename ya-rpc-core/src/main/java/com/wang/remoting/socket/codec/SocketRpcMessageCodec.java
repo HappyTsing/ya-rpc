@@ -33,6 +33,7 @@ import java.util.Arrays;
  * 4B  extension bits（扩展位）
  * body（RpcRequest 或者 RpcResponse 实例对象）
  * </pre>
+ * 流的输入和输出必须是原子性的，否则多线程时会导致输出/输出的流并非是完整的协议。
  */
 @Slf4j
 public class SocketRpcMessageCodec {
@@ -59,15 +60,18 @@ public class SocketRpcMessageCodec {
         body = compressor.compress(body);
         int bodyLength = body.length;
 
-        // 输出协议
-        dout.write(ProtocolConst.MAGIC_CODE);
-        dout.write(ProtocolConst.VERSION);
-        dout.writeInt(bodyLength);
-        dout.write(messageType);
-        dout.write(serializerType);
-        dout.write(compressorType);
-        dout.write(body);
-        dout.flush();
+        synchronized (this){
+            // 输出协议
+            dout.write(ProtocolConst.MAGIC_CODE);
+            dout.write(ProtocolConst.VERSION);
+            dout.writeInt(bodyLength);
+            dout.write(messageType);
+            dout.write(serializerType);
+            dout.write(compressorType);
+            dout.write(body);
+            dout.flush();
+        }
+
     }
 
     /**
@@ -77,7 +81,7 @@ public class SocketRpcMessageCodec {
      * @param din 输入流
      * @return 基于 messageType 的不同，返回 RpcRequest/RpcResponse
      */
-    public Object decode(DataInputStream din) throws IOException {
+    public synchronized Object decode(DataInputStream din) throws IOException {
         log.info("Decoding protocol.");
         checkMagicCode(din);
         checkVersion(din);
