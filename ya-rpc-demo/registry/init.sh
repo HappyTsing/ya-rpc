@@ -1,0 +1,1 @@
+COMPOSE_PROJECT_NAME=zookeeper_cluster docker-compose -f zookeeper_cluster.yml up -d
