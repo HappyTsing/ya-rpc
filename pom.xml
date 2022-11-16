@@ -24,13 +24,14 @@
         <!-- lambok -->
         <lambok.version>1.18.24</lambok.version>
 
-<!--        <netty.version>4.1.42.Final</netty.version>-->
-<!--        <spring.version>5.2.7.RELEASE</spring.version>-->
         <!-- zookeeper 类库-->
         <curator.version>5.4.0</curator.version>
+        <guava.version>31.1-jre</guava.version>
+
         <!-- test -->
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
         <junit.platform.version>1.9.0</junit.platform.version>
+
         <!--logging-->
         <logback-classic.version>1.4.4</logback-classic.version>
 
@@ -40,7 +41,13 @@
         <!-- hessian-->
         <hessian.version>4.0.66</hessian.version>
         <!-- kyro-->
-        <kryo.version>4.0.2</kryo.version>
+        <!--        <kryo.version>4.0.2</kryo.version>-->
+
+        <!-- Netty 网络传输-->
+        <!--        <netty.version>4.1.42.Final</netty.version>-->
+        <!-- Spring 自动注册、扫描  -->
+        <!--        <spring.version>5.2.7.RELEASE</spring.version>-->
+
     </properties>
     <dependencies>
         <!-- lambok -->
@@ -93,11 +100,11 @@
                 <artifactId>curator-recipes</artifactId>
                 <version>${curator.version}</version>
             </dependency>
+            <!-- guava -->
             <dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-test</artifactId>
-                <version>${curator.version}</version>
-                <scope>test</scope>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
