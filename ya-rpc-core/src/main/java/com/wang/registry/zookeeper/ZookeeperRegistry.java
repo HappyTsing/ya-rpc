@@ -56,6 +56,7 @@ public class ZookeeperRegistry implements Registry {
             log.info("The service already registered. The providerPath is {}",providerPath);
         }else{
             CuratorUtils.createPersistentNode(zkClient,providerPath);
+            REGISTERED_PROVIDER_PATH_CACHE.add(providerPath);
             log.info("Register service success, The providerPath is {}", providerPath);
         }
     }

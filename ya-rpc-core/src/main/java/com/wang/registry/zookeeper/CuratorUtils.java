@@ -30,7 +30,7 @@ public class CuratorUtils {
             if (zkClient.checkExists().forPath(path.toString()) != null) {
                 log.info("The node already exists. The node is: {}", path);
             } else {
-                //eg: /ya-rpc/com.wang.HelloService/127.0.0.1:9999
+                //eg: /ya-rpc-provider/com.wang.HelloService/127.0.0.1:9999
                 zkClient
                         //创建节点构建器CreateBuilder
                         .create()
