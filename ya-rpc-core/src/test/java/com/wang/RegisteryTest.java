@@ -32,6 +32,12 @@ public class RegisteryTest {
     }
 
     @Test
+    public void unregisterAllService(){
+        ZookeeperRegistry registry = (ZookeeperRegistry) ExtensionLoader.getExtensionLoader(Registry.class).getExtension("zookeeper");
+        registry.unregisterAllService();
+    }
+
+    @Test
     public void watch(){
         ZookeeperRegistry registry = (ZookeeperRegistry) ExtensionLoader.getExtensionLoader(Registry.class).getExtension("zookeeper");
         ServiceSignature serviceSignature = new ServiceSignature("com.wang.HelloService","1","1");
@@ -39,35 +45,6 @@ public class RegisteryTest {
         InetSocketAddress inetSocketAddress = new InetSocketAddress("1.2.3.4",8080);
         registry.register(serviceSignature,inetSocketAddress);
         registry.unregister(serviceSignature,inetSocketAddress);
-    }
-
-    @Test
-    public  void addChildrenListener(){
-        CuratorCache curatorCache = CuratorCache.build(CuratorUtils.getZkClient(), "/ya-rpc-provider/com.wang.HelloService?group=1&version=1");
-        curatorCache.listenable().addListener((type, oldData, newData) -> {
-            switch (type){
-                case NODE_CREATED:
-                    System.out.println("zNode created, newpath: " + newData.getPath());
-                    break;
-                case NODE_CHANGED:
-                    System.out.println("zNode changed, oldPath: "+ oldData.getPath() +"newPath: " + newData.getPath());
-                    break;
-                case NODE_DELETED:
-                    System.out.println("zNode deleted, oldPath: "+ oldData.getPath());
-                    break;
-                default:
-                    System.out.println("Unknown");
-            }
-        });
-        curatorCache.start();
-        System.out.println("watch start");
-        ZookeeperRegistry registry = new ZookeeperRegistry();
-        ServiceSignature serviceSignature = new ServiceSignature("com.wang.HelloService","1","1");
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("2.3.4.5",8080);
-        registry.register(serviceSignature,inetSocketAddress);
-        registry.unregister(serviceSignature,inetSocketAddress);
-        System.out.println("watch stop");
-        curatorCache.close();
     }
 
 }

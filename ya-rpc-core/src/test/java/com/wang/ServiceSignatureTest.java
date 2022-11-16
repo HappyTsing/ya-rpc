@@ -3,6 +3,9 @@ package com.wang;
 import com.wang.dto.ServiceSignature;
 import org.junit.Test;
 
+/**
+ * 测试重写的 equals 和 hashCode 方法是否可用
+ */
 public class ServiceSignatureTest {
     @Test
     public void test(){
