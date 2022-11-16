@@ -47,6 +47,7 @@ public class SocketRpcMessageCodec {
      * @param dout 输出流
      */
     public void encode(RpcMessage rpcMessage, DataOutputStream dout) throws IOException {
+        log.info("Encoding protocol.");
         byte messageType = rpcMessage.getMessageType();
         byte serializerType = rpcMessage.getSerializeType();
         byte compressorType = rpcMessage.getCompressType();
@@ -77,6 +78,7 @@ public class SocketRpcMessageCodec {
      * @return 基于 messageType 的不同，返回 RpcRequest/RpcResponse
      */
     public Object decode(DataInputStream din) throws IOException {
+        log.info("Decoding protocol.");
         checkMagicCode(din);
         checkVersion(din);
         int bodyLength = din.readInt();
@@ -88,7 +90,6 @@ public class SocketRpcMessageCodec {
 
         Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(SerializerTypeEnum.getName(serializerType));
         Compressor compressor = ExtensionLoader.getExtensionLoader(Compressor.class).getExtension(CompressorTypeEnum.getName(compressorType));
-
         byte[] data = compressor.decompress(body);
         if(messageType == MessageTypeEnum.REQUEST.getCode()){
             RpcRequest rpcRequest = serializer.deserialize(data, RpcRequest.class);

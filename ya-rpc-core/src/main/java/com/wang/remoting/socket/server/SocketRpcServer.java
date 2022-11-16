@@ -49,7 +49,7 @@ public class SocketRpcServer implements RpcServer {
      */
     @Override
     public void start() {
-        ShutdownHook.addShutdownHook();
+        ServerHook.addShutdownHook();
         try (ServerSocket server = new ServerSocket()) {
             String host = InetAddress.getLocalHost().getHostAddress();
             server.bind(new InetSocketAddress(host, PORT));

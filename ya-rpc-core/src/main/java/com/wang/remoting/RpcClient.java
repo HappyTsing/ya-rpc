@@ -2,6 +2,8 @@ package com.wang.remoting;
 
 import com.wang.dto.RpcMessage;
 
+import java.net.SocketTimeoutException;
+
 /**
  * 用于发起请求，动态代理的类的方法执行时会调用
  * @author happytsing

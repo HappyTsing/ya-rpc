@@ -18,6 +18,9 @@ public class CommonConfig {
     private static final String DEFAULT_ZOOKEEPER_ADDRESS = "127.0.0.1:2181";
 
     private static final int DEFAULT_RPC_SERVER_PORT = 8713;
+    private static final int RETRY = 3;
+
+
 
     /**
      * 自定义配置
@@ -35,6 +38,7 @@ public class CommonConfig {
      *      loadbalancer     负载均衡器
      *      zookeeperAddress zookeeper地址，一般是集群的形式
      *      rpcServerPort    服务端响应 RPC 请求的端口号
+     *      retry            超时重传次数
      */
     public static String clientSerializer = DEFAULT_SERIALIZER;
     public static String serverSerializer = DEFAULT_SERIALIZER;
@@ -44,8 +48,10 @@ public class CommonConfig {
 
     public static String registry = DEFAULT_REGISTRY;
     public static String loadbalancer = DEFAULT_LOADBALANCER;
+
     public static String zookeeperAddress =  "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183";
     public static int rpcServerPort =  DEFAULT_RPC_SERVER_PORT;
+    public static int retry =  RETRY;
 
 
 
