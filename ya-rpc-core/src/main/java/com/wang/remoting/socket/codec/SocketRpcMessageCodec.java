@@ -19,18 +19,21 @@ import java.util.Arrays;
 /**
  * 自定义协议
  * <pre>
- *   0     1     2     3     4         5    6    7    8      9            10            11         12   13   14   15  16
- *   +-----+-----+-----+-----+---------+----+----+----+-----+--------------+------------+------------+---+---+---+---+
- *   |      magic code       | version |     body length     | messageType | serializer | compressor | extension bit |
- *   +-----------------------+---------+--------------------+--------------+------------+------------+---------------+
- *   |                                                                                                               |
- *   |                                             body                                                              |
- *   |                                                                                                               |
- *   |                                            ... ...                                                            |
- *   +---------------------------------------------------------------------------------------------------------------+
- * 4B  magic code（魔法数）     1B  version（版本）         4B  body length（body长度）
- * 1B  message type（消息类型）  1B  compressor（压缩类型）   1B  serializer（序列化类型）
- * 4B  extension bits（扩展位）
+ *   0(bytes)                                                4             5             6            7            8
+ *   +-------------------------------------------------------+-------------+-------------+------------+------------+
+ *   |                      magic code                       |   version   | messageType | serializer | compressor |
+ *   +-------------------------------------------------------+-------------+-------------+------------+------------+
+ *   |                      body length                      |                   extension bytes                   |
+ *   +-------------------------------------------------------------------------------------------------------------+
+ *   |                                                                                                             |
+ *   |                                            body                                                             |
+ *   |                                                                                                             |
+ *   |                                           ... ...                                                           |
+ *   +-------------------------------------------------------------------------------------------------------------+
+ * 4B  magic code（魔数）
+ * 1B  version（版本）  1B  message type（消息类型）  1B  compressor（压缩类型）  1B  serializer（序列化类型）
+ * 4B  body length（body长度）
+ * 4B  extension bytes（扩展字节）
  * body（RpcRequest 或者 RpcResponse 实例对象）
  * </pre>
  * 流的输入和输出必须是原子性的，否则多线程时会导致输出/输出的流并非是完整的协议。
@@ -64,10 +67,10 @@ public class SocketRpcMessageCodec {
             // 输出协议
             dout.write(ProtocolConst.MAGIC_CODE);
             dout.write(ProtocolConst.VERSION);
-            dout.writeInt(bodyLength);
             dout.write(messageType);
             dout.write(serializerType);
             dout.write(compressorType);
+            dout.writeInt(bodyLength);
             dout.write(body);
             dout.flush();
         }
@@ -85,10 +88,10 @@ public class SocketRpcMessageCodec {
         log.info("Decoding protocol.");
         checkMagicCode(din);
         checkVersion(din);
-        int bodyLength = din.readInt();
         byte messageType = din.readByte();
         byte serializerType = din.readByte();
         byte compressorType = din.readByte();
+        int bodyLength = din.readInt();
         byte[] body = new byte[bodyLength];
         din.read(body);
 
