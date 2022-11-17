@@ -1,6 +1,5 @@
 package com.wang.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 
@@ -12,7 +11,6 @@ import lombok.Getter;
  * @author happytsing
  */
 @Getter
-@AllArgsConstructor
 public class ServiceSignature {
 
     private final String interfaceName;
@@ -23,6 +21,27 @@ public class ServiceSignature {
     public String toString() {
         return interfaceName+"?"+"group="+group+"&version="+version;
     }
+
+
+    public ServiceSignature(String interfaceName, String group, String version) {
+        this.interfaceName = interfaceName;
+        this.group = group;
+        this.version = version;
+    }
+
+    public ServiceSignature(Object service,String group, String version) {
+        this.interfaceName = service.getClass().getInterfaces()[0].getCanonicalName();
+        this.group = group;
+        this.version = version;
+    }
+
+    public <T> ServiceSignature(Class<T> serviceClazz,String group, String version) {
+        this.interfaceName = serviceClazz.getInterfaces()[0].getCanonicalName();
+        this.group = group;
+        this.version = version;
+    }
+
+
 
 
     @Override
