@@ -1,4 +1,4 @@
-package com.wang.serviceImpl;
+package com.wang.serviceImpl.groupName1.version1;
 
 
 import com.wang.pojo.User;
@@ -6,6 +6,8 @@ import com.wang.service.UserService;
 
 /**
  * @author happytsing
+ * @group groupName1
+ * @version version1
  */
 public class UserServiceImpl implements UserService {
 
