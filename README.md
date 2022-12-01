@@ -2,7 +2,7 @@
 
 参考 `dubbo` 的简易 RPC 框架，
 
-前序知识请查看：[The Simple Tutorial Of RPC](The%20Simple%20Tutorial%20Of%20RPC.md)
+前序知识请查看：[The Simple Tutorial Of RPC](docs/The%20Simple%20Tutorial%20Of%20RPC.md)
 
 ## 快速开始
 
