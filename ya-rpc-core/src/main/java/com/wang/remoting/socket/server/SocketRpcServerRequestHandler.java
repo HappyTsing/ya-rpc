@@ -76,6 +76,7 @@ public class SocketRpcServerRequestHandler implements RequestHandler {
 
             if(RESPONSE_CACHE.containsKey(requestId)){
                 rpcResponse = RESPONSE_CACHE.get(requestId);
+                log.info("hit cache for request " + requestId);
             }else{
                 Object result = handle(rpcRequest);
                 rpcResponse = RpcResponse.success(result,rpcRequest.getRequestId());

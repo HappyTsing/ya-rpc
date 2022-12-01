@@ -38,7 +38,6 @@ public class ServerHook {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("定时任务执行啦！");
                 System.out.println(SocketRpcServerRequestHandler.RESPONSE_CACHE);
                 SocketRpcServerRequestHandler.RESPONSE_CACHE.remove(requestId);
                 System.out.println(SocketRpcServerRequestHandler.RESPONSE_CACHE);
